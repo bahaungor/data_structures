@@ -13,7 +13,7 @@ function merge(left, right) {
     let result = [];
     let leftIndex = 0;
     let rightIndex = 0;
-  
+
     // Compare elements from the left and right arrays
     while (leftIndex < left.length && rightIndex < right.length) {
       if (left[leftIndex] < right[rightIndex]) {
