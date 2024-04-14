@@ -99,7 +99,38 @@ function hashMap(){
     return false
   }
 
-  return { set, get, has }
+  function remove(key){
+    for (let i = 0; i < bucket.length; i++) {
+      if (bucket[i].length > 0){
+        let currentNode = bucket[i][0]
+        while (currentNode !== null){
+          if(currentNode.key === key) {
+            currentNode = currentNode.next;
+            size--;
+            bucket[i] = []
+            if (currentNode !== null) bucket[i].push(currentNode)
+            return true
+          } else {
+            currentNode = currentNode.next
+          }
+        }
+      }
+    }
+    return false
+  }
+
+  const length = () => size
+
+  function clear(){
+    bucket = null
+    bucket = Array(bucketSize).fill(null).map(() => []);
+  }
+
+  function keys(){
+    // map all keys
+  }
+
+  return { set, get, has, remove, length, clear, keys }
 }
 
 deneme = hashMap()
@@ -110,5 +141,6 @@ deneme.set("vsfddw", "wervxc")
 deneme.set("123123", "123123")
 deneme.set("qewqe112", "12312dasda")
 deneme.set("sdasqw", "vsvs32")
-deneme.set("vsdfsfd", "adasdwww")
-console.log(deneme.get("vsdfsfd"))
+deneme.set("aliveli", "adasdwww")
+console.log(deneme.remove("aliveli"))
+console.log(deneme.length())
