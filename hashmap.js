@@ -1,6 +1,6 @@
 function hashMap(){
-  let bucketSize = 8;
-  let loadFactor = 0.7;
+  let bucketSize = 16;
+  let loadFactor = 0.9;
   let size = 0;
   
   let bucket = Array(bucketSize).fill(null).map(() => []);
@@ -42,7 +42,6 @@ function hashMap(){
   }
 
   function set(key, value) {
-    console.log("set called")
     if (size/bucketSize > loadFactor) {
       bucket = resize()
     }
@@ -66,19 +65,50 @@ function hashMap(){
         currentNode.next = { key, value, next:null }
         size++
     }
-  
   }
-  return { set }
+
+  function get(key){
+    for (let i = 0; i < bucket.length; i++) {
+      if (bucket[i].length > 0){
+        let currentNode = bucket[i][0]
+        while (currentNode !== null){
+          if (currentNode.key === key) {
+            return currentNode.value
+          } else {
+            currentNode = currentNode.next
+          }
+        }
+      }
+    }
+    return null
+  }
+
+  function has(key){
+    for (let i = 0; i < bucket.length; i++) {
+      if (bucket[i].length > 0){
+        let currentNode = bucket[i][0]
+        while (currentNode !== null){
+          if (currentNode.key === key) {
+            return true
+          } else {
+            currentNode = currentNode.next
+          }
+        }
+      }
+    }
+    return false
+  }
+
+  return { set, get, has }
 }
 
 deneme = hashMap()
-let we = deneme.set("Bahadır", "Ungor")
-we =deneme.set("asd", "qwe")
-we =deneme.set("wererg", "ntyrtr")
-we =deneme.set("vsfddw", "wervxc")
-we =deneme.set("123123", "123123")
-we =deneme.set("qewqe112", "12312dasda")
-we =deneme.set("sdasqw", "vsvs32")
-we =deneme.set("vsdfsfd", "adasdwww")
-
-console.log(we)
+deneme.set("Bahadır", "Ungor")
+deneme.set("asd", "qwe")
+deneme.set("wererg", "ntyrtr")
+deneme.set("vsfddw", "wervxc")
+deneme.set("123123", "123123")
+deneme.set("qewqe112", "12312dasda")
+deneme.set("sdasqw", "vsvs32")
+deneme.set("vsdfsfd", "adasdwww")
+console.log(deneme.get("vsdfsfd"))
