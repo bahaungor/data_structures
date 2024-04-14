@@ -127,10 +127,48 @@ function hashMap(){
   }
 
   function keys(){
-    // map all keys
+    let keys = []
+    for (let i = 0; i < bucket.length; i++) {
+      if (bucket[i].length > 0){
+        let currentNode = bucket[i][0]
+        while (currentNode !== null){
+          keys.push(currentNode.key)
+          currentNode = currentNode.next;
+        }
+      }
+    }
+    return keys;
   }
 
-  return { set, get, has, remove, length, clear, keys }
+  function values(){
+    let values = []
+    for (let i = 0; i < bucket.length; i++) {
+      if (bucket[i].length > 0){
+        let currentNode = bucket[i][0]
+        while (currentNode !== null){
+          values.push(currentNode.value)
+          currentNode = currentNode.next;
+        }
+      }
+    }
+    return values;
+  }
+
+  function entries(){
+    let entries = []
+    for (let i = 0; i < bucket.length; i++) {
+      if (bucket[i].length > 0){
+        let currentNode = bucket[i][0]
+        while (currentNode !== null){
+          entries.push([currentNode.key, currentNode.value])
+          currentNode = currentNode.next;
+        }
+      }
+    }
+    return entries;
+  }
+
+  return { set, get, has, remove, length, clear, keys, values, entries }
 }
 
 deneme = hashMap()
@@ -144,3 +182,4 @@ deneme.set("sdasqw", "vsvs32")
 deneme.set("aliveli", "adasdwww")
 console.log(deneme.remove("aliveli"))
 console.log(deneme.length())
+console.log(deneme.entries())
