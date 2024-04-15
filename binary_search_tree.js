@@ -53,6 +53,58 @@ function BST(){
     return root
   }
 
+  function deleteNode(data) {
+    root = _deleteNodeRec(root, data);
+  }
+
+  function _deleteNodeRec(root, data) {
+      if (!root) return root;
+
+      if (root.data > data) {
+          root.left = _deleteNodeRec(root.left, data);
+          return root;
+      } else if (root.data < data) {
+          root.right = _deleteNodeRec(root.right, data);
+          return root;
+      }
+
+      // If one of the children is empty
+      if (root.left === null) {
+          let temp = root.right;
+          root = null;
+          return temp;
+      } else if (root.right === null) {
+          let temp = root.left;
+          root = null;
+          return temp;
+      }
+
+      // If both children exist
+      else {
+          let succParent = root;
+
+          // Find successor
+          let succ = root.right;
+          while (succ.left !== null) {
+              succParent = succ;
+              succ = succ.left;
+          }
+
+          if (succParent !== root) {
+              succParent.left = succ.right;
+          } else {
+              succParent.right = succ.right;
+          }
+
+          // Copy Successor Data to root
+          root.data = succ.data;
+
+          // Delete Successor and return root
+          succ = null;
+          return root;
+      }
+  }
+
   const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
       return;
@@ -66,10 +118,11 @@ function BST(){
     }
   };
 
-  return { tree, insert, prettyPrint}
+  return { tree, insert, deleteNode, prettyPrint}
 }
 
 let deneme = BST()
 let myTree = deneme.tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 deneme.insert(11)
+deneme.deleteNode(11)
 console.log(deneme.prettyPrint(myTree))
