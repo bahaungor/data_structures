@@ -135,7 +135,149 @@ function BST(){
     }
   };
 
-  return { tree, insert, deleteNode, find, prettyPrint}
+  function levelOrder(callback) {
+    if (!root) return []; // If the tree is empty, return an empty array
+
+    const queue = [root]; // Initialize queue with the root node
+    const values = []; // Initialize an array to store the values of traversed nodes
+
+    while (queue.length > 0) {
+      const node = queue.shift(); // Dequeue the front node from the queue
+
+      if (callback) {
+        callback(node.data); // If callback function is provided, apply it to the node data
+      } else {
+        values.push(node.data); // Otherwise, push the node data to the values array
+      }
+
+      if (node.left) {
+        queue.push(node.left); // Enqueue left child if it exists
+      }
+      if (node.right) {
+        queue.push(node.right); // Enqueue right child if it exists
+      }
+    }
+
+    return values; // Return array of values if no callback is provided
+  }
+
+  function inOrder(callback) {
+    const values = []; // Initialize an array to store the values of traversed nodes
+
+    function traverse(node) {
+      if (!node) return;
+
+      traverse(node.left); // Recursively traverse left subtree
+      if (callback) {
+        callback(node.data); // If callback function is provided, apply it to the node data
+      } else {
+        values.push(node.data); // Otherwise, push the node data to the values array
+      }
+      traverse(node.right); // Recursively traverse right subtree
+    }
+
+    traverse(root); // Start traversal from the root
+
+    return values; // Return array of values if no callback is provided
+  }
+
+  function preOrder(callback) {
+    const values = []; // Initialize an array to store the values of traversed nodes
+
+    function traverse(node) {
+      if (!node) return;
+
+      if (callback) {
+        callback(node.data); // If callback function is provided, apply it to the node data
+      } else {
+        values.push(node.data); // Otherwise, push the node data to the values array
+      }
+      traverse(node.left); // Recursively traverse left subtree
+      traverse(node.right); // Recursively traverse right subtree
+    }
+
+    traverse(root); // Start traversal from the root
+
+    return values; // Return array of values if no callback is provided
+  }
+
+  function postOrder(callback) {
+    const values = []; // Initialize an array to store the values of traversed nodes
+
+    function traverse(node) {
+      if (!node) return;
+
+      traverse(node.left); // Recursively traverse left subtree
+      traverse(node.right); // Recursively traverse right subtree
+      if (callback) {
+        callback(node.data); // If callback function is provided, apply it to the node data
+      } else {
+        values.push(node.data); // Otherwise, push the node data to the values array
+      }
+    }
+
+    traverse(root); // Start traversal from the root
+
+    return values; // Return array of values if no callback is provided
+  }
+
+  function height(node) {
+    if (!node) return -1; // Height of null node is -1
+
+    const leftHeight = height(node.left); // Height of left subtree
+    const rightHeight = height(node.right); // Height of right subtree
+
+    // Height of the node is the maximum height of its subtrees plus 1 (to account for the current node)
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+
+  function isBalanced() {
+    return checkBalanced(root);
+  }
+
+  function checkBalanced(node) {
+    if (!node) return true; // Base case: An empty tree is balanced
+
+    // Calculate the height of the left and right subtrees
+    const leftHeight = height(node.left);
+    const rightHeight = height(node.right);
+
+    // Check if the absolute difference in heights is not more than 1
+    // and recursively check if both left and right subtrees are balanced
+    return Math.abs(leftHeight - rightHeight) <= 1 &&
+           checkBalanced(node.left) &&
+           checkBalanced(node.right);
+  }
+
+  function rebalance() {
+    const nodes = [];
+    // Traverse the tree in any depth-first order and collect all nodes into an array
+    inOrderTraversal(root, nodes);
+
+    // Rebuild the tree from the collected nodes array
+    root = buildTree(nodes, 0, nodes.length - 1);
+  }
+
+  function inOrderTraversal(node, nodes) {
+    if (!node) return;
+    inOrderTraversal(node.left, nodes);
+    nodes.push(node);
+    inOrderTraversal(node.right, nodes);
+  }
+
+  function buildTree(nodes, start, end) {
+    if (start > end) return null;
+
+    const mid = Math.floor((start + end) / 2);
+    const node = nodes[mid];
+
+    node.left = buildTree(nodes, start, mid - 1);
+    node.right = buildTree(nodes, mid + 1, end);
+
+    return node;
+  }
+
+  return { tree, insert, deleteNode, find, prettyPrint, levelOrder, inOrder, preOrder, postOrder, height, isBalanced, rebalance }
 }
 
 let deneme = BST()
@@ -144,3 +286,19 @@ deneme.insert(11)
 deneme.deleteNode(11)
 console.log(deneme.find(9))
 console.log(deneme.prettyPrint(myTree))
+
+console.log("Breadth-first traversal:");
+deneme.levelOrder((data) => console.log(data));
+
+console.log("In-order traversal:");
+deneme.inOrder((data) => console.log(data)); // Callback function to log each node
+// Or to get an array of values:
+// const inOrderValues = deneme.inOrder();
+
+console.log("Pre-order traversal:");
+deneme.preOrder((data) => console.log(data)); // Callback function to log each node
+// Or to get an array of values:
+// const preOrderValues = deneme.preOrder();
+
+console.log("Post-order traversal:");
+deneme.postOrder((data) => console.log(data)); // Callback function to log each node
